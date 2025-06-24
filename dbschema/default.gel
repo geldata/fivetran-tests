@@ -23,7 +23,7 @@ module default {
 
         access policy filter_title
             allow select
-            using (global filter_title ?= .title ?? true);
+            using ((global filter_title = .title) ?? true);
         access policy dml allow insert, update, delete;
     }
 

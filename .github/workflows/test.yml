@@ -21,7 +21,19 @@ jobs:
           ln -s `gel server info --channel=nightly --get bin-path` ~/.local/bin/edgedb-server
           ln -s `gel server info --channel=nightly --get bin-path` ~/.local/bin/gel-server
 
-      - uses: dtolnay/rust-toolchain@stable
+      - name: Cache build
+        id: cache-build
+        uses: actions/cache@v4
+        with:
+          path: target/debug/runner
+          key: ${{ runner.os }}-${{ hashFiles('src/**/*.rs') }}
+
+      - name: Install Rust toolchain
+        if: steps.cache-build.outputs.cache-hit != 'true'
+        uses: dtolnay/rust-toolchain@stable
+      - name: Build
+        if: steps.cache-build.outputs.cache-hit != 'true'
+        run: cargo build
 
       - name: Run
         env:
