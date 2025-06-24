@@ -173,9 +173,9 @@ dependencies = [
 
 [[package]]
 name = "bumpalo"
-version = "3.18.1"
+version = "3.19.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "793db76d6187cd04dff33004d8e6c9cc4e05cd330500379d2394209271b4aeee"
+checksum = "46c5e41b57b8bba42a04676d81cb89e9ee8e859a1a66f80a5a72e1cb76b34d43"
 
 [[package]]
 name = "bytemuck"
@@ -374,9 +374,9 @@ dependencies = [
 
 [[package]]
 name = "derive-io"
-version = "0.3.2"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1e605d186a93a98a76e5b63e468edec712896127a7bfd0d1f587079297e96029"
+checksum = "7e4cb9ab86d9e7cabf990ac7411b91a0ccc12c7bfc4276cde686ddbb009c9368"
 dependencies = [
  "derive-io-macros",
  "tokio",
@@ -384,9 +384,9 @@ dependencies = [
 
 [[package]]
 name = "derive-io-macros"
-version = "0.3.2"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "274c39173edac39e47b83e3c8f72ce17acd47554dde38ed871cb208716b9bb9e"
+checksum = "f2d96797c8c05c6efa4246c11dbaaf76ce283dedca9358911697f1270b18fa0c"
 dependencies = [
  "proc-macro2",
 ]
@@ -610,7 +610,7 @@ dependencies = [
 [[package]]
 name = "gel-auth"
 version = "0.1.6"
-source = "git+https://github.com/geldata/gel-rust.git?branch=gel-captive#b2db8d61e28389237e022c3fd862ec17918dae7c"
+source = "git+https://github.com/geldata/gel-rust.git#d6cbd411452ffb193f66b13c2f2cdfd64181fcc7"
 dependencies = [
  "base64",
  "constant_time_eq",
@@ -627,7 +627,7 @@ dependencies = [
 [[package]]
 name = "gel-captive"
 version = "0.1.0"
-source = "git+https://github.com/geldata/gel-rust.git?branch=gel-captive#b2db8d61e28389237e022c3fd862ec17918dae7c"
+source = "git+https://github.com/geldata/gel-rust.git#d6cbd411452ffb193f66b13c2f2cdfd64181fcc7"
 dependencies = [
  "command-fds",
  "fs_extra",
@@ -639,7 +639,7 @@ dependencies = [
 [[package]]
 name = "gel-pg-captive"
 version = "0.1.1"
-source = "git+https://github.com/geldata/gel-rust.git?branch=gel-captive#b2db8d61e28389237e022c3fd862ec17918dae7c"
+source = "git+https://github.com/geldata/gel-rust.git#d6cbd411452ffb193f66b13c2f2cdfd64181fcc7"
 dependencies = [
  "gel-auth",
  "gel-stream",
@@ -650,8 +650,8 @@ dependencies = [
 
 [[package]]
 name = "gel-stream"
-version = "0.4.4"
-source = "git+https://github.com/geldata/gel-rust.git?branch=gel-captive#b2db8d61e28389237e022c3fd862ec17918dae7c"
+version = "0.4.5"
+source = "git+https://github.com/geldata/gel-rust.git#d6cbd411452ffb193f66b13c2f2cdfd64181fcc7"
 dependencies = [
  "derive-io",
  "derive_more",
@@ -663,7 +663,6 @@ dependencies = [
  "rustls-tokio-stream",
  "smallvec",
  "socket2",
- "thiserror 2.0.12",
  "tokio",
  "webpki",
  "webpki-roots",
@@ -1481,7 +1480,6 @@ dependencies = [
  "bytes",
  "encoding_rs",
  "futures-core",
- "futures-util",
  "h2",
  "http",
  "http-body",
@@ -1503,14 +1501,12 @@ dependencies = [
  "sync_wrapper",
  "tokio",
  "tokio-rustls",
- "tokio-util",
  "tower",
  "tower-http",
  "tower-service",
  "url",
  "wasm-bindgen",
  "wasm-bindgen-futures",
- "wasm-streams",
  "web-sys",
  "webpki-roots",
 ]
@@ -2343,19 +2339,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "wasm-streams"
-version = "0.4.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "15053d8d85c7eccdbefef60f06769760a563c7f0a9d6902a13d35c7800b0ad65"
-dependencies = [
- "futures-util",
- "js-sys",
- "wasm-bindgen",
- "wasm-bindgen-futures",
- "web-sys",
-]
-
-[[package]]
 name = "web-sys"
 version = "0.3.77"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2486,9 +2469,9 @@ checksum = "5e6ad25900d524eaabdbbb96d20b4311e1e7ae1699af4fb28c17ae66c80d798a"
 
 [[package]]
 name = "windows-registry"
-version = "0.5.2"
+version = "0.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b3bab093bdd303a1240bb99b8aba8ea8a69ee19d34c9e2ef9594e708a4878820"
+checksum = "5b8a9ed28765efc97bbc954883f4e6796c33a06546ebafacbabee9696967499e"
 dependencies = [
  "windows-link",
  "windows-result",

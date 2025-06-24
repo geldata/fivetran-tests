@@ -4,9 +4,9 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-gel-auth = { git = "https://github.com/geldata/gel-rust.git", branch = "gel-captive", version = "0.1.6" }
-gel-pg-captive = { git = "https://github.com/geldata/gel-rust.git", branch = "gel-captive", version = "0.1.1" }
-gel-captive = { git = "https://github.com/geldata/gel-rust.git", branch = "gel-captive", version = "0.1.0" }
+gel-auth = { git = "https://github.com/geldata/gel-rust.git", version = "0.1.6" }
+gel-pg-captive = { git = "https://github.com/geldata/gel-rust.git", version = "0.1.1" }
+gel-captive = { git = "https://github.com/geldata/gel-rust.git", version = "0.1.0" }
 tokio = { version = "1.45.1", features = ["macros", "rt", "signal", "time"] }
 clap = { version = "4.5.40", features = ["derive"] }
 bore-cli = "0.6.0"
@@ -17,7 +17,6 @@ reqwest = { version = "0.12", features = [
     "charset",
     "system-proxy",
     "json",
-    "stream",
     "rustls-tls",
 ], default-features = false }
 chrono = "0.4.41"
@@ -26,17 +25,3 @@ anyhow = "1.0.98"
 log = "0.4.27"
 env_logger = "0.11.8"
 serde_repr = "0.1.20"
-
-# OpenAPI client
-# progenitor = { git = "https://github.com/oxidecomputer/progenitor" }
-# futures = "0.3"
-# reqwest = { version = "0.12", features = [
-#     "http2",
-#     "charset",
-#     "system-proxy",
-#     "json",
-#     "stream",
-#     "rustls-tls",
-# ], default-features = false }
-# serde = { version = "1.0", features = ["derive"] }
-# chrono = { version = "0.4", features = ["serde"] }

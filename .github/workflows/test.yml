@@ -26,14 +26,14 @@ jobs:
         uses: actions/cache@v4
         with:
           path: target/debug/runner
-          key: ${{ runner.os }}-${{ hashFiles('src/**/*.rs') }}
+          key: ${{ runner.os }}-${{ hashFiles('**/*.{rs,toml,gel,edgeql}') }}
 
       - name: Install Rust toolchain
         if: steps.cache-build.outputs.cache-hit != 'true'
         uses: dtolnay/rust-toolchain@stable
       - name: Build
         if: steps.cache-build.outputs.cache-hit != 'true'
-        run: cargo build
+        run: cargo build --locked
 
       - name: Run
         env:
