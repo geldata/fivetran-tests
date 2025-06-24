@@ -1,0 +1,32 @@
+name: 'test'
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '00 12 * * *'
+  workflow_dispatch: {}
+
+jobs:
+  test_schedule:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Gel CLI and nightly server (Linux)
+        run: |
+          bash <(curl --proto '=https' --tlsv1.2 -sSf https://sh.edgedb.com) -y
+          gel server install --nightly
+          ln -s `gel server info --channel=nightly --get bin-path` ~/.local/bin/edgedb-server
+          ln -s `gel server info --channel=nightly --get bin-path` ~/.local/bin/gel-server
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Run
+        env:
+          RUST_LOG: runner=debug,
+          FIVETRAN_AUTHORIZATION: ${{ secrets.FIVETRAN_AUTHORIZATION }}
+          BORE_SERVER_IP: ${{ secrets.BORE_SERVER_IP }}
+          BORE_SERVER_SECRET: ${{ secrets.BORE_SERVER_SECRET }}
+        run: cargo run

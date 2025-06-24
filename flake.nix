@@ -32,16 +32,7 @@
       in
       {
         devShells.default = pkgs.mkShell {
-          allowUnfree = true;
-
           buildInputs = with pkgs; [
-            # for generating Fivetran client API
-            just
-            openapi-python-client
-
-            # runner
-            gel.packages.${system}.gel-server
-            gel.packages.${system}.gel-cli
             (rust_toolchain.withComponents [
               "cargo"
               "clippy"
@@ -51,9 +42,12 @@
               "rust-analyzer"
             ])
 
-            # development
-            python312Packages.python-lsp-server
-            python312Packages.python-lsp-ruff
+            gel.packages.${system}.gel-server
+            gel.packages.${system}.gel-cli
+
+            # for generating Fivetran client API (obsolete)
+            just
+            openapi-python-client
           ];
         };
       }
