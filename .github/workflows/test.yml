@@ -8,7 +8,7 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  test_schedule:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -41,4 +41,4 @@ jobs:
           FIVETRAN_AUTHORIZATION: ${{ secrets.FIVETRAN_AUTHORIZATION }}
           BORE_SERVER_IP: ${{ secrets.BORE_SERVER_IP }}
           BORE_SERVER_SECRET: ${{ secrets.BORE_SERVER_SECRET }}
-        run: cargo run
+        run: ./target/debug/runner
