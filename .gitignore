@@ -1,0 +1,8 @@
+.direnv
+.envrc
+
+.vscode
+
+target/
+
+fivetran_client/
