@@ -1,4 +1,5 @@
 mod fivetran;
+mod postgres;
 
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use std::str::FromStr;
@@ -38,13 +39,18 @@ async fn main() -> anyhow::Result<()> {
                 r.unwrap();
             }
             _ = tokio::signal::ctrl_c() => {},
-            _ = tokio::time::sleep(tokio::time::Duration::from_secs(100)) => {}
+            // _ = tokio::time::sleep(tokio::time::Duration::from_secs(1000)) => {}
         }
     });
 
     // run tests
     log::info!("running tests");
-    fivetran::run_test(postgres_addr_pub, gel_addr_pub).await?;
+    let objects = fivetran::run_test(postgres_addr_pub, gel_addr_pub).await?;
+    // tokio::time::sleep(tokio::time::Duration::from_secs(100000)).await;
+    fivetran::cleanup(&objects).await?;
+
+    // validating transferred data
+    postgres::run_tests(postgres.tcp_address).await?;
 
     // stop servers
     drop(postgres);

@@ -8,7 +8,7 @@ use chrono::{Datelike, Timelike, Utc};
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 
-pub async fn run_test(pg_addr: SocketAddr, gel_addr: SocketAddr) -> anyhow::Result<()> {
+pub async fn run_test(pg_addr: SocketAddr, gel_addr: SocketAddr) -> anyhow::Result<CreatedObjects> {
     let client = Client::new();
 
     let group = create_group(&client).await?;
@@ -45,14 +45,25 @@ pub async fn run_test(pg_addr: SocketAddr, gel_addr: SocketAddr) -> anyhow::Resu
     } else {
         log::info!("succeeded");
     }
+    Ok(CreatedObjects { group, destination })
+}
 
+pub struct CreatedObjects {
+    group: GroupResponse,
+    destination: DestinationExtendedResponse,
+}
+
+pub async fn cleanup(objects: &CreatedObjects) -> anyhow::Result<()> {
     log::info!("cleaning up");
-    let connectors = list_connectors_of_group(&client, &group.id).await?;
+
+    let client = Client::new();
+
+    let connectors = list_connectors_of_group(&client, &objects.group.id).await?;
     for connector in &connectors.items {
         delete_connector(&client, &connector.id).await?;
     }
-    delete_destination(&client, &destination.id).await?;
-    delete_group(&client, &group.id).await?;
+    delete_destination(&client, &objects.destination.id).await?;
+    delete_group(&client, &objects.group.id).await?;
 
     Ok(())
 }

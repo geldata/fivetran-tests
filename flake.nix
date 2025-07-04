@@ -41,6 +41,8 @@
               "rustfmt"
               "rust-analyzer"
             ])
+            pkg-config
+            openssl
 
             gel.packages.${system}.gel-server
             gel.packages.${system}.gel-cli
