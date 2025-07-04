@@ -44,18 +44,19 @@ async fn main() -> anyhow::Result<()> {
     });
 
     // run tests
-    log::info!("running tests");
-    let objects = fivetran::run_test(postgres_addr_pub, gel_addr_pub).await?;
-    // tokio::time::sleep(tokio::time::Duration::from_secs(100000)).await;
+    log::info!("setting up fivetran sync");
+    let objects = fivetran::setup_sync(postgres_addr_pub, gel_addr_pub).await?;
+    // tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
     fivetran::cleanup(&objects).await?;
 
     // validating transferred data
-    postgres::run_tests(postgres.tcp_address).await?;
+    log::info!("validating synced data");
+    postgres::validate_data(postgres.tcp_address).await?;
+    log::info!("sync tests passed");
 
     // stop servers
     drop(postgres);
     drop(gel_server);
-
     Ok(())
 }
 

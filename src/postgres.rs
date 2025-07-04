@@ -4,7 +4,7 @@ use openssl::ssl::{SslConnector, SslMethod, SslVerifyMode};
 use postgres_openssl::MakeTlsConnector;
 use tokio_postgres::Row;
 
-pub async fn run_tests(addr: SocketAddr) -> anyhow::Result<()> {
+pub async fn validate_data(addr: SocketAddr) -> anyhow::Result<()> {
     let mut builder = SslConnector::builder(SslMethod::tls())?;
     builder.set_verify(SslVerifyMode::NONE);
     let connector = MakeTlsConnector::new(builder.build());
@@ -360,6 +360,5 @@ Hunger Games, Part 3
         "#,
     )?;
 
-    log::info!("Sync tests passed.");
     Ok(())
 }

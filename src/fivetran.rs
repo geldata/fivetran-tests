@@ -8,7 +8,7 @@ use chrono::{Datelike, Timelike, Utc};
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 
-pub async fn run_test(pg_addr: SocketAddr, gel_addr: SocketAddr) -> anyhow::Result<CreatedObjects> {
+pub async fn setup_sync(pg_addr: SocketAddr, gel_addr: SocketAddr) -> anyhow::Result<CreatedObjects> {
     let client = Client::new();
 
     let group = create_group(&client).await?;
@@ -30,7 +30,7 @@ pub async fn run_test(pg_addr: SocketAddr, gel_addr: SocketAddr) -> anyhow::Resu
 
     let mut connector = start_sync(&client, &connector.id).await?;
     log::debug!("connector.status = {:#?}", connector.status);
-    while connector.failed_at.is_some() || connector.succeeded_at.is_some() {
+    while connector.failed_at.is_none() && connector.succeeded_at.is_none() {
         log::info!("waiting for connector sync to succeed or fail");
         tokio::time::sleep(tokio::time::Duration::from_secs(10)).await;
 
