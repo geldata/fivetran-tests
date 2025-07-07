@@ -248,7 +248,7 @@ async fn create_destination(
             group_id: group_id.to_string(),
             service: "postgres_warehouse".into(),
             time_zone_offset: TimeZoneOffset::utc,
-            region: Some(Region::AWS_EU_CENTRAL_1),
+            region: None,
             trust_certificates: Some(true),
             trust_fingerprints: Some(true),
             run_setup_tests: Some(true),
