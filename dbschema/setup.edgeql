@@ -65,3 +65,5 @@ insert default::links::C {
     prop := (insert default::links::A),
     vals := {"1", "2", "3", "4"},
 };
+
+configure current branch set apply_access_policies_pg := false;

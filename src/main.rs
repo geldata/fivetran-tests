@@ -47,6 +47,13 @@ async fn main() -> anyhow::Result<()> {
     log::info!("setting up fivetran sync");
     let objects = fivetran::setup_sync(postgres_addr_pub, gel_addr_pub).await?;
     // tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
+
+    // wait a long time, for manual debugging
+    tokio::select! {
+        _ = tokio::signal::ctrl_c() => {},
+        _ = tokio::time::sleep(tokio::time::Duration::from_secs(10000)) => {}
+    }
+
     fivetran::cleanup(&objects).await?;
 
     // validating transferred data
@@ -93,6 +100,7 @@ async fn start_postgres() -> gel_pg_captive::PostgresProcess {
         gel_pg_captive::PostgresBuilder::new()
             .auth(gel_auth::AuthType::Trust)
             .with_automatic_mode(gel_pg_captive::Mode::TcpSsl)
+            // .server_option("log_statement", "all")
             .with_automatic_bin_path()
             .unwrap()
             .build()
