@@ -49,10 +49,10 @@ async fn main() -> anyhow::Result<()> {
     // tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
 
     // wait a long time, for manual debugging
-    tokio::select! {
-        _ = tokio::signal::ctrl_c() => {},
-        _ = tokio::time::sleep(tokio::time::Duration::from_secs(10000)) => {}
-    }
+    // tokio::select! {
+    //     _ = tokio::signal::ctrl_c() => {},
+    //     _ = tokio::time::sleep(tokio::time::Duration::from_secs(10000)) => {}
+    // }
 
     fivetran::cleanup(&objects).await?;
 
