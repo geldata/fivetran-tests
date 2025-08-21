@@ -8,7 +8,10 @@ use chrono::{Datelike, Timelike, Utc};
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 
-pub async fn setup_sync(pg_addr: SocketAddr, gel_addr: SocketAddr) -> anyhow::Result<CreatedObjects> {
+pub async fn setup_sync(
+    pg_addr: SocketAddr,
+    gel_addr: SocketAddr,
+) -> anyhow::Result<CreatedObjects> {
     let client = Client::new();
 
     let group = create_group(&client).await?;
@@ -28,6 +31,16 @@ pub async fn setup_sync(pg_addr: SocketAddr, gel_addr: SocketAddr) -> anyhow::Re
     let schema = reload_connector_schema_config(&client, &connector.id).await?;
     log::trace!("schema = {schema:#?}");
 
+    update_connector_schema_config(
+        &client,
+        &connector.id,
+        &UpdateConnectorSchemaRequest {
+            schema_change_handling: SchemaChangeHandling::BlockAll,
+            schemas: pick_schema(schema),
+        },
+    )
+    .await?;
+
     let mut connector = start_sync(&client, &connector.id).await?;
     log::debug!("connector.status = {:#?}", connector.status);
     while connector.failed_at.is_none() && connector.succeeded_at.is_none() {
@@ -46,6 +59,53 @@ pub async fn setup_sync(pg_addr: SocketAddr, gel_addr: SocketAddr) -> anyhow::Re
         log::info!("succeeded");
     }
     Ok(CreatedObjects { group, destination })
+}
+
+/// Picks schema objects that we want to sync.
+fn pick_schema(schema: StandardConfigResponse) -> HashMap<String, UpdateConnectorSchema> {
+    const SKIP_COLUMNS: &[(&str, &str, &str)] = &[
+        // Don't sync username, because it is a computed that needs a global,
+        // and we don't support globals over COPY yet.
+        ("public", "Person", "username"),
+    ];
+
+    schema
+        .schemas
+        .into_iter()
+        .map(|(s_name, s)| {
+            let s_name_ref = s_name.as_str();
+            let s = UpdateConnectorSchema {
+                enabled: true,
+                tables: s
+                    .tables
+                    .into_iter()
+                    .map(|(t_name, t)| {
+                        let t_name_ref = t_name.as_str();
+                        let t = UpdateConnectorTable {
+                            enabled: true,
+                            columns: t
+                                .columns
+                                .into_iter()
+                                .map(|(c_name, c)| {
+                                    let enabled = c.enabled
+                                        && !SKIP_COLUMNS
+                                            .contains(&(s_name_ref, t_name_ref, &c_name));
+                                    let c = UpdateConnectorColumn {
+                                        enabled,
+                                        hashed: Some(false),
+                                        is_primary_key: c.is_primary_key,
+                                    };
+                                    (c_name, c)
+                                })
+                                .collect(),
+                        };
+                        (t_name, t)
+                    })
+                    .collect(),
+            };
+            (s_name, s)
+        })
+        .collect()
 }
 
 pub struct CreatedObjects {
@@ -768,7 +828,7 @@ async fn delete_connector(client: &Client, connector_id: &str) -> anyhow::Result
     receive_api_response_empty(res).await
 }
 
-// --- schema config ---
+// --- schema config reload ---
 
 async fn reload_connector_schema_config(
     client: &Client,
@@ -821,5 +881,67 @@ struct ColumnConfigResponse {
     enabled: bool,
     hashed: bool,
     // enabled_patch_settings: "ColumnEnabledPatchSettings",
+    is_primary_key: Option<bool>,
+}
+
+// --- schema config update ---
+
+async fn update_connector_schema_config(
+    client: &Client,
+    connection_id: &str,
+    request: &UpdateConnectorSchemaRequest,
+) -> anyhow::Result<StandardConfigResponse> {
+    log::info!("update_connector_schema_config");
+
+    let res = client
+        .request(
+            reqwest::Method::PATCH,
+            &format!("/v1/connections/{connection_id}/schemas"),
+        )
+        .json(request)
+        .send()
+        .await?;
+
+    receive_api_response(res).await
+}
+
+#[derive(Serialize)]
+struct UpdateConnectorSchemaRequest {
+    schema_change_handling: SchemaChangeHandling,
+    schemas: HashMap<String, UpdateConnectorSchema>,
+}
+
+/// The possible values for the schema_change_handling parameter are as follows:
+#[derive(Serialize)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+enum SchemaChangeHandling {
+    /// all new schemas, tables, and columns which appear in the source after the initial setup are included in syncs
+    AllowAll,
+    /// all new schemas and tables which appear in the source after the initial setup are excluded from syncs, but new columns are included
+    AllowColumns,
+    /// all new schemas, tables, and columns which appear in the source after the initial setup are excluded from syncs
+    BlockAll,
+}
+
+#[derive(Serialize)]
+struct UpdateConnectorSchema {
+    enabled: bool,
+    tables: HashMap<String, UpdateConnectorTable>,
+}
+
+#[derive(Serialize)]
+struct UpdateConnectorTable {
+    enabled: bool,
+    columns: HashMap<String, UpdateConnectorColumn>,
+}
+
+#[derive(Serialize)]
+struct UpdateConnectorColumn {
+    enabled: bool,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    hashed: Option<bool>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     is_primary_key: Option<bool>,
 }

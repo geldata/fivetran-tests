@@ -142,6 +142,7 @@ gel_public, content, genre_id
 gel_public, content, title
 gel_public, contentsummary, id
 gel_public, contentsummary, __type__
+gel_public, contentsummary, x
 gel_public, genre, id
 gel_public, genre, __type__
 gel_public, genre, name
@@ -154,6 +155,7 @@ gel_public, movie, title
 gel_public, movie_actors, source
 gel_public, movie_actors, target
 gel_public, movie_actors, role
+gel_public, movie_actors, role_lower
 gel_public, movie_director, source
 gel_public, movie_director, target
 gel_public, movie_director, bar
@@ -167,7 +169,10 @@ gel_public, novel_chapters, source
 gel_public, novel_chapters, target
 gel_public, person, id
 gel_public, person, __type__
+gel_public, person, directed_movie_id
+gel_public, person, favorite_genre_id
 gel_public, person, first_name
+gel_public, person, full_name
 gel_public, person, last_name
 gel_public___links, a, id
 gel_public___links, a, __type__
@@ -214,16 +219,16 @@ Fiction
         query_to_text(
             c,
             r#"
-        SELECT first_name, last_name
+        SELECT first_name, last_name, full_name
         FROM gel_public.person
         ORDER BY first_name"#,
         )
         .await?,
         r#"
-first_name, last_name
-Robin, NULL
-Steven, Spielberg
-Tom, Hanks
+first_name, last_name, full_name
+Robin, NULL, Robin
+Steven, Spielberg, Steven Spielberg
+Tom, Hanks, Tom Hanks
         "#,
     )?;
 
