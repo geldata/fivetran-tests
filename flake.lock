@@ -80,11 +80,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1755660163,
-        "narHash": "sha256-ZZOmC0NKaW1Ei5WmwuXMx41o3yjBmlXLvUu3mPThGJk=",
+        "lastModified": 1755766883,
+        "narHash": "sha256-i8bhSA9XN6O7W5YsZ8X1bpVYvRnMJn/6EDdrlRlZPZ8=",
         "owner": "geldata",
         "repo": "packages-nix",
-        "rev": "fdd04d7924525c12d1e976eaa3dca0657c53fd66",
+        "rev": "b8aefc03db48f0d372c0b55854ae8dd23bb81d57",
         "type": "github"
       },
       "original": {

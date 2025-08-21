@@ -45,3 +45,7 @@ jobs:
           BORE_SERVER_IP: ${{ secrets.BORE_SERVER_IP }}
           BORE_SERVER_SECRET: ${{ secrets.BORE_SERVER_SECRET }}
         run: ./target/debug/runner
+
+      - name: Print gel-server logs
+        if: always() # run even if prev step fails
+        run: cat ./target/gel-server.log

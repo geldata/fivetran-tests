@@ -72,7 +72,10 @@ fn assert_eq(found: String, expected: &'static str) -> anyhow::Result<()> {
     if expected.trim() == found.trim() {
         Ok(())
     } else {
-        Err(anyhow::anyhow!("found:\n{found}\nexpected:\n{expected}"))
+        Err(anyhow::anyhow!(
+            "{}",
+            similar_asserts::SimpleDiff::from_str(expected, &found, "expected", "found")
+        ))
     }
 }
 

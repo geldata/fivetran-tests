@@ -111,9 +111,15 @@ async fn start_postgres() -> gel_pg_captive::PostgresProcess {
 }
 
 async fn start_gel_server() -> gel_captive::ServerProcess {
-    let server = tokio::task::spawn_blocking(|| gel_captive::ServerBuilder::new().start())
-        .await
-        .unwrap();
+    let server = tokio::task::spawn_blocking(|| {
+        gel_captive::ServerBuilder::new()
+            .log_file_path(Some(
+                path::PathBuf::from_str("./target/gel-server.log").unwrap(),
+            ))
+            .start()
+    })
+    .await
+    .unwrap();
 
     // apply schema
     server.apply_schema(&path::PathBuf::from_str("./dbschema").unwrap());

@@ -6,7 +6,7 @@ edition = "2024"
 [dependencies]
 gel-auth = { git = "https://github.com/geldata/gel-rust.git", version = "0.1.6" }
 gel-pg-captive = { git = "https://github.com/geldata/gel-rust.git", version = "0.1.1" }
-gel-captive = { git = "https://github.com/geldata/gel-rust.git", version = "0.1.0" }
+gel-captive = { git = "https://github.com/geldata/gel-rust.git", version = "0.1.0", branch = "gel-captive-log-path" }
 tokio = { version = "1.45.1", features = ["macros", "rt", "signal", "time"] }
 clap = { version = "4.5.40", features = ["derive"] }
 bore-cli = "0.6.0"
@@ -28,3 +28,4 @@ serde_repr = "0.1.20"
 tokio-postgres = "0.7.13"
 postgres-openssl = "0.5.1"
 openssl = "0.10.73"
+similar-asserts = "1.7.0"

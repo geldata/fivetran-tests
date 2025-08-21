@@ -44,7 +44,7 @@
             pkg-config
             openssl
 
-            gel.packages.${system}.gel-server
+            gel.packages.${system}.gel-server-nightly
             gel.packages.${system}.gel-cli
 
             # for generating Fivetran client API (obsolete)
